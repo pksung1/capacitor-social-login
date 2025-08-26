@@ -216,7 +216,19 @@ public class AppleProvider implements SocialProvider {
     }
 
     private void loginWithRedirect(PluginCall call, JSONObject config) {
-        String state = UUID.randomUUID().toString();
+
+        String state = null
+        
+        if (config.has("state")) {
+            try {
+                state = config.getString("state");
+            } catch (JSONException e) {
+                Log.e(SocialLoginPlugin.LOG_TAG, "Error parsing state", e);
+                state = UUID.randomUUID().toString();
+            }
+        } else {
+            state = UUID.randomUUID().toString();
+        }
 
         // Extract scopes from config
         String scopes = DEFAULT_SCOPE;
